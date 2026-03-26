@@ -93,7 +93,7 @@ public class Grok
      */
     public boolean isDormant()
     {
-        // TODO: replace this line with your code.
+        return state == GrokState.DORMANT;
     }
 
     /*
@@ -102,7 +102,7 @@ public class Grok
      */
     public boolean isWeakened()
     {
-        // TODO: replace this line with your code.
+        return state == GrokState.WEAKENED;
     }
 
     /*
@@ -111,7 +111,7 @@ public class Grok
      */
     public boolean isActive()
     {
-        // TODO: replace this line with your code.
+        return state == GrokState.ACTIVE;
     }
 
     /*
@@ -120,7 +120,7 @@ public class Grok
      */
     public boolean isDefeated()
     {
-        // TODO: replace this line with your code.
+        return state == GrokState.DEFEATED;
     }
 
     // ---------------------------------------------------------------
@@ -145,7 +145,15 @@ public class Grok
      */
     public void takePowerPill(PowerPill pill)
     {
-        // TODO: replace this line with your code.
+        if (state == GrokState.DEFEATED) {
+            return;
+        }
+        setPowerLevel(pill.getPower() + powerLevel);
+        if (powerLevel >= 20) {
+            state = GrokState.ACTIVE;
+        } else {
+            state = GrokState.WEAKENED;
+        }
     }
 
     /*
@@ -158,6 +166,27 @@ public class Grok
      */
     public void tookHit()
     {
-        // TODO: replace this line with your code.
+        if (state == GrokState.DEFEATED) {
+            return;
+        }
+
+        setPowerLevel(powerLevel - 5);
+
+        if (state == GrokState.ACTIVE) {
+            if (powerLevel < 20 && powerLevel >= 1) {
+                state = GrokState.WEAKENED;
+            } else if (powerLevel <= 0) {
+                state = GrokState.DEFEATED;
+            } else {
+                state = GrokState.ACTIVE;
+            }
+        } else if (state == GrokState.WEAKENED) {
+            if (powerLevel > 0) {
+                state = GrokState.WEAKENED;
+            } else {
+                state = GrokState.DEFEATED;
+            }
+
+        }
     }
 }
